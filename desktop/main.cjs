@@ -184,6 +184,14 @@ function rebuildTrayMenu() {
     { label: 'Режим управления', type: 'checkbox', checked: interactive, click: (item) => setInteractive(item.checked) },
     { label: 'Слушать / остановить диалог', click: () => send('toggle-dialog') },
     { label: 'Пересобрать образ', click: () => send('replay-intro') },
+    {
+      label: 'Масштаб образа',
+      submenu: [
+        { label: 'Увеличить на 10%', click: () => send('scale-up') },
+        { label: 'Уменьшить на 10%', click: () => send('scale-down') },
+        { label: 'Вернуть 100%', click: () => send('scale-reset') },
+      ],
+    },
     { type: 'separator' },
     { label: 'Запускать с Windows', type: 'checkbox', checked: login, click: (item) => setAutostart(item.checked) },
     { label: 'Перезапустить интерфейс', click: () => mainWindow && mainWindow.reload() },
@@ -231,10 +239,18 @@ async function createWindow() {
   if (SMOKE_TEST) {
     mainWindow.showInactive();
     await delay(9500);
+    const initialScale = await mainWindow.webContents.executeJavaScript('window.orb?.getAvatarScale?.() || 1');
+    await mainWindow.webContents.executeJavaScript('window.orb?.setAvatarScale?.(1, false)');
+    send('scale-up');
+    await delay(150);
+    const scaleControl = await mainWindow.webContents.executeJavaScript('window.orb?.getAvatarScale?.() || null');
+    await mainWindow.webContents.executeJavaScript(`window.orb?.setAvatarScale?.(${JSON.stringify(initialScale)}, false)`);
     const profile = await mainWindow.webContents.executeJavaScript(`({
       voice: window.orb?.audio?.voice || null,
       desktopOverlay: document.documentElement.classList.contains('desktop-overlay'),
       passive: document.documentElement.classList.contains('desktop-passive'),
+      avatarScale: window.orb?.getAvatarScale?.() || null,
+      scaleControl: ${JSON.stringify(scaleControl)},
       status: document.getElementById('status')?.textContent || ''
     })`);
     const image = await mainWindow.webContents.capturePage();
@@ -256,6 +272,9 @@ function registerShortcuts() {
   globalShortcut.register('CommandOrControl+Alt+J', () => setInteractive(!interactive));
   globalShortcut.register('CommandOrControl+Alt+V', () => send('toggle-dialog'));
   globalShortcut.register('CommandOrControl+Alt+H', toggleVisible);
+  globalShortcut.register('CommandOrControl+Alt+Up', () => send('scale-up'));
+  globalShortcut.register('CommandOrControl+Alt+Down', () => send('scale-down'));
+  globalShortcut.register('CommandOrControl+Alt+0', () => send('scale-reset'));
 }
 
 const hasSingleInstanceLock = app.requestSingleInstanceLock();

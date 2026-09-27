@@ -59,6 +59,12 @@ const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
 const group = new THREE.Group();
 scene.add(group);
 
+const AVATAR_SCALE_KEY = 'yasen.desktop.avatarScale';
+const clampAvatarScale = (value) => Math.min(1.6, Math.max(0.55, value));
+const storedAvatarScale = DESKTOP_MODE ? Number(localStorage.getItem(AVATAR_SCALE_KEY)) : 1;
+let avatarScale = clampAvatarScale(Number.isFinite(storedAvatarScale) && storedAvatarScale > 0 ? storedAvatarScale : 1);
+group.scale.setScalar(avatarScale);
+
 const geo = new THREE.BufferGeometry();
 const attr = (arr, size) => new THREE.BufferAttribute(arr, size);
 const posAttr = attr(new Float32Array(portrait.pos), 3);
@@ -182,6 +188,20 @@ function setVoice(name) {
 // реплики Ясеня показываются по настройке субтитров; служебные сообщения и ошибки - всегда
 const showCaption = (text) => subs.say(text, 'bot');
 const toast = subs.toast;
+
+function setAvatarScale(value, notify = true) {
+  const next = clampAvatarScale(Math.round(Number(value) * 20) / 20);
+  if (!Number.isFinite(next)) return;
+  avatarScale = next;
+  group.scale.setScalar(avatarScale);
+  if (DESKTOP_MODE) localStorage.setItem(AVATAR_SCALE_KEY, String(avatarScale));
+  syncUi();
+  if (notify) toast(`Масштаб Ясеня: ${Math.round(avatarScale * 100)}%`);
+}
+
+function changeAvatarScale(delta) {
+  setAvatarScale(avatarScale + delta);
+}
 
 // «Демо-голос»: синтетическая огибающая, похожая на речь по слогам и паузам
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -499,6 +519,7 @@ function micUi() {
 // публичный API для отладки и встраивания
 window.orb = {
   setState, setShape, setVoice, showCaption, playUrl, setDemo, burst: (v = 1) => { burst = v; },
+  setAvatarScale, getAvatarScale: () => avatarScale,
   audio, face, shared, camera, reader, startReading, replay, replayIntro, dialog, panels, subs, S, toast, reconfigure, personaPulse, tracker, STATES: Object.keys(STATES), VOICES: VOICE_NAMES,
 };
 
@@ -519,8 +540,10 @@ function syncUi() {
   q('#btn-subs').classList.toggle('on', S.get('subs'));
   q('#btn-persona').classList.toggle('on', panels.isOpen('persona'));
   q('#btn-settings').classList.toggle('on', panels.isOpen('settings'));
+  q('#btn-scale-reset').textContent = `${Math.round(avatarScale * 100)}%`;
   tp.read.textContent = reader.running ? 'С начала' : 'Читать';
   const bits = [`<b>${STATES[state].label}</b>`, shapeName, `голос: ${VOICES[voiceName].label.toLowerCase()}`];
+  if (DESKTOP_MODE) bits.push(`масштаб: ${Math.round(avatarScale * 100)}%`);
   if (introT < INTRO_LEN) bits.push(introSpeed > 1 ? 'перенастройка характера…' : 'сборка…');
   if (dialog.active) bits.push(`диалог: ${PHASES[dialog.phase] || ''}`);
   if (reader.running && readProg.n) bits.push(`чтение ${readProg.i}/${readProg.n}`);
@@ -544,11 +567,17 @@ q('#btn-dialog').addEventListener('click', toggleDialog);
 q('#btn-persona').addEventListener('click', () => panels.toggle('persona'));
 q('#btn-subs').addEventListener('click', () => S.set('subs', !S.get('subs')));
 q('#btn-settings').addEventListener('click', () => panels.toggle('settings'));
+q('#btn-scale-down').addEventListener('click', () => changeAvatarScale(-0.1));
+q('#btn-scale-reset').addEventListener('click', () => setAvatarScale(1));
+q('#btn-scale-up').addEventListener('click', () => changeAvatarScale(0.1));
 
 if (window.yasenDesktop?.isDesktop) {
   window.yasenDesktop.onCommand((command) => {
     if (command === 'toggle-dialog') toggleDialog();
     else if (command === 'replay-intro') replayIntro();
+    else if (command === 'scale-down') changeAvatarScale(-0.1);
+    else if (command === 'scale-reset') setAvatarScale(1);
+    else if (command === 'scale-up') changeAvatarScale(0.1);
   });
 }
 
@@ -579,6 +608,9 @@ window.addEventListener('keydown', (e) => {
   else if (k === 'm') toggleMic();
   else if (k === 'c') toggleCam();
   else if (k === 'x') { audio.sfxOn = !audio.sfxOn; syncUi(); }
+  else if (k === '[') changeAvatarScale(-0.1);
+  else if (k === ']') changeAvatarScale(0.1);
+  else if (k === '0') setAvatarScale(1);
   else if (k === 'h') ui.bar.classList.toggle('hidden');
   else if (k === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
 });
