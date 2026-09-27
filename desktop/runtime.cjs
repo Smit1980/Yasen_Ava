@@ -67,8 +67,28 @@ function centeredSquareBounds(workArea, preferredSide = 1120, margin = 64) {
   };
 }
 
+function avatarWindowSide(scale, contentSide = 820, padding = 80, minimum = 240) {
+  const parsed = Number(scale);
+  if (!Number.isFinite(parsed)) return null;
+  return Math.max(minimum, Math.round(Math.max(0, parsed) * contentSide + padding));
+}
+
+function squareBoundsWithSide(bounds, side) {
+  if (!bounds || !Number.isFinite(bounds.x) || !Number.isFinite(bounds.y)
+    || !Number.isFinite(bounds.width) || !Number.isFinite(bounds.height)) return null;
+  const parsedSide = Math.round(Number(side));
+  if (!Number.isFinite(parsedSide) || parsedSide < 1) return null;
+  return {
+    x: Math.round(bounds.x + (bounds.width - parsedSide) / 2),
+    y: Math.round(bounds.y + (bounds.height - parsedSide) / 2),
+    width: parsedSide,
+    height: parsedSide,
+  };
+}
+
 module.exports = {
   SERVICE_URL,
+  avatarWindowSide,
   boundedMoveDelta,
   centeredSquareBounds,
   desktopUrl,
@@ -76,4 +96,5 @@ module.exports = {
   isCompatibleService,
   movedBounds,
   pythonCandidates,
+  squareBoundsWithSide,
 };

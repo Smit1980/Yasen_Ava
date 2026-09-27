@@ -4,12 +4,14 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const test = require('node:test');
 const {
+  avatarWindowSide,
   boundedMoveDelta,
   centeredSquareBounds,
   desktopUrl,
   isCompatibleService,
   movedBounds,
   pythonCandidates,
+  squareBoundsWithSide,
 } = require('./runtime.cjs');
 
 test('recognizes only a Yasen/Voice Orb page', () => {
@@ -44,4 +46,14 @@ test('drag movement preserves window size and rejects unsafe deltas', () => {
 test('avatar frame is a centered square inside the usable display area', () => {
   const bounds = centeredSquareBounds({ x: 0, y: 0, width: 1920, height: 1080 });
   assert.deepEqual(bounds, { x: 452, y: 32, width: 1016, height: 1016 });
+});
+
+test('compact avatar frame tracks scale while keeping its center', () => {
+  assert.equal(avatarWindowSide(0.55), 531);
+  assert.equal(avatarWindowSide(1), 900);
+  assert.equal(avatarWindowSide(1.6), 1392);
+  assert.deepEqual(
+    squareBoundsWithSide({ x: 100, y: 200, width: 900, height: 900 }, 531),
+    { x: 285, y: 385, width: 531, height: 531 },
+  );
 });

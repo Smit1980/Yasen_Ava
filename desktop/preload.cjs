@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld('yasenDesktop', {
   endDrag() {
     ipcRenderer.send('yasen-drag-end');
   },
+  setAvatarScale(scale) {
+    ipcRenderer.send('yasen-avatar-scale', scale);
+  },
   onCommand(callback) {
     if (typeof callback !== 'function') return () => {};
     const handler = (_event, command) => callback(command);

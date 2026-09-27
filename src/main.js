@@ -15,6 +15,7 @@ import { Reader, decodeText } from './reader.js';
 
 const DESKTOP_MODE = new URLSearchParams(location.search).get('desktop') === '1';
 if (DESKTOP_MODE) document.documentElement.classList.add('desktop-overlay', 'desktop-passive');
+const DESKTOP_CAMERA_Z = 2.75;
 
 // ---- интро: лицо собирается из потока частиц (?intro=0 - пропустить)
 const INTRO_LEN = 8.2;
@@ -115,7 +116,8 @@ function resize() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  const z = debugView ? debugView.z : 4.7 * Math.max(1, 1.14 / camera.aspect);
+  const baseZ = DESKTOP_MODE ? DESKTOP_CAMERA_Z : 4.7;
+  const z = debugView ? debugView.z : baseZ * Math.max(1, 1.14 / camera.aspect);
   camera.position.set(0, debugView ? debugView.y : 0, z);
   camera.updateProjectionMatrix();
   // пикселей на мировую единицу: по нему масштабируется размер частиц
@@ -194,7 +196,10 @@ function setAvatarScale(value, notify = true) {
   if (!Number.isFinite(next)) return;
   avatarScale = next;
   group.scale.setScalar(avatarScale);
-  if (DESKTOP_MODE) localStorage.setItem(AVATAR_SCALE_KEY, String(avatarScale));
+  if (DESKTOP_MODE) {
+    localStorage.setItem(AVATAR_SCALE_KEY, String(avatarScale));
+    window.yasenDesktop?.setAvatarScale?.(avatarScale);
+  }
   syncUi();
   if (notify) toast(`Масштаб Ясеня: ${Math.round(avatarScale * 100)}%`);
 }
@@ -522,6 +527,7 @@ window.orb = {
   setAvatarScale, getAvatarScale: () => avatarScale,
   audio, face, shared, camera, reader, startReading, replay, replayIntro, dialog, panels, subs, S, toast, reconfigure, personaPulse, tracker, STATES: Object.keys(STATES), VOICES: VOICE_NAMES,
 };
+if (DESKTOP_MODE) window.yasenDesktop?.setAvatarScale?.(avatarScale);
 
 // ---------------------------------------------------------------- UI
 const q = (s) => document.querySelector(s);
@@ -626,7 +632,7 @@ touchBar();
 if (introT < INTRO_LEN) ui.bar.classList.add('idle');   // на время интро панель скрыта до движения мыши
 window.addEventListener('keydown', touchBar);
 
-// курсор отталкивает частицы
+// В браузере курсор отталкивает частицы; настольный аватар сохраняет неподвижный контур.
 const pointerNdc = new THREE.Vector2(9, 9);
 let desktopDrag = null;
 let desktopDragArmed = false;
@@ -662,7 +668,7 @@ function endDesktopDrag() {
 
 window.addEventListener('pointermove', (e) => {
   touchBar();
-  pointerNdc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  if (!DESKTOP_MODE) pointerNdc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
   if (!DESKTOP_MODE || !window.yasenDesktop) return;
   if (desktopDrag) {
     if (!e.shiftKey || !(e.buttons & 1)) { endDesktopDrag(); return; }
@@ -680,10 +686,12 @@ window.addEventListener('pointerleave', () => {
   if (!desktopDrag) endDesktopDrag();
 });
 window.addEventListener('pointerdown', (e) => {
-  if (DESKTOP_MODE && e.button === 0 && e.shiftKey) {
-    armDesktopDrag();
-    desktopDrag = { x: e.screenX, y: e.screenY };
-    canvas.setPointerCapture?.(e.pointerId);
+  if (DESKTOP_MODE && e.button === 0) {
+    if (e.shiftKey) {
+      armDesktopDrag();
+      desktopDrag = { x: e.screenX, y: e.screenY };
+      canvas.setPointerCapture?.(e.pointerId);
+    }
     e.preventDefault();
     return;
   }
@@ -693,7 +701,8 @@ window.addEventListener('pointerdown', (e) => {
 window.addEventListener('pointerup', endDesktopDrag);
 window.addEventListener('blur', endDesktopDrag);
 window.addEventListener('wheel', (e) => {
-  if (!DESKTOP_MODE || !e.shiftKey || !e.deltaY) return;
+  const holdsPrimaryButton = Boolean(e.buttons & 1);
+  if (!DESKTOP_MODE || !e.deltaY || !(holdsPrimaryButton || e.shiftKey)) return;
   e.preventDefault();
   changeAvatarScale(e.deltaY < 0 ? 0.05 : -0.05);
 }, { passive: false });
@@ -776,8 +785,8 @@ function step(dt) {
   group.rotation.y = rotY + (state === 'thinking' ? time * cur.spin * 0.15 : 0);
   group.rotation.x = rotX;
 
-  // курсор -> локальная точка
-  if (Math.abs(pointerNdc.x) <= 1) {
+  // Курсор влияет только на браузерный режим. Камера сохраняет отдельную реакцию рук.
+  if (!DESKTOP_MODE && Math.abs(pointerNdc.x) <= 1) {
     ray.setFromCamera(pointerNdc, camera);
     if (ray.ray.intersectPlane(plane, hit)) shared.uPointer.value.copy(hit).sub(group.position);
   } else shared.uPointer.value.set(99, 99, 99);
