@@ -1,0 +1,28 @@
+{
+  "formatVersion": 1,
+  "name": "Yasen_Ava",
+  "sourceRepository": "https://github.com/Smit1980/Yasen",
+  "sourceCommit": "0e6f6d8dbe5e85175c09cc76b2018b7f95f31831",
+  "capturedAt": "2026-09-27T18:30:00+03:00",
+  "hashAlgorithm": "sha256",
+  "textNormalization": "UTF-8 with LF line endings",
+  "files": {
+    "assets/portrait.webp": { "mode": "binary", "sha256": "6a3ce458c2b4641b7f943b70f0263b6b9aebbafed59260ab6b867fc8eb64330d" },
+    "index.html": { "mode": "text-lf", "sha256": "ff85a933e14b1e47f0b4fb94cc73514cf38c987b7f22f890b236b95062843410" },
+    "STARTUP_PROFILE.json": { "mode": "text-lf", "sha256": "c48d83821c33d7ba4cedaf384084ec380967820a178157890d949c0a4565c2ac" },
+    "requirements.txt": { "mode": "text-lf", "sha256": "e3b385b5c486a4899339a1b04e63ab167be12e5fc2ee25329deaa48caf1b0b74" },
+    "bridge/server.py": { "mode": "text-lf", "sha256": "36badd2787b766d0ab445bfa68ab88ed10d0d197231f9de752c0cbbb631a7ecc" },
+    "bridge/agent.py": { "mode": "text-lf", "sha256": "03caf3695685de7a9686f21ecf6d97d5e0b879c3a22909c0840da59fd12d5c97" },
+    "bridge/stt.py": { "mode": "text-lf", "sha256": "77fbe4f7b12b074609862a81f2526f7bc7b05986b57de6cf9984a5f92e809393" },
+    "src/main.js": { "mode": "text-lf", "sha256": "3377ec9d1cbae3fa654f8611bc6f6368eda4fd9c5cc4638b9f2580fad7363d3b" },
+    "src/portrait.js": { "mode": "text-lf", "sha256": "6459808cd495890943c5ff1af0dd97d3667e7615d6f077e15018658944299ffd" },
+    "src/shaders.js": { "mode": "text-lf", "sha256": "8a8cfee9f3611f49d24f4af06af5a9df76f40a28d1b86940e4079b865d7b0826" },
+    "src/face.js": { "mode": "text-lf", "sha256": "b84e56bd460473c8486dfadaf519c62e983f3918a20ce4b6e669e5399a24ca09" },
+    "src/voicefx.js": { "mode": "text-lf", "sha256": "6ba9dabd7e931b4e3a1b60de77be0c08cf684bbf56b6cb5859eadc29ff8c3005" },
+    "src/voicefx-worklet.js": { "mode": "text-lf", "sha256": "13532b95c3b9b6f4f464468cf1f8dd905c3225b947fa9901e9882acc76e0e5e5" },
+    "src/audio.js": { "mode": "text-lf", "sha256": "3e7ebc10ba32f7914c9fd2448492101f744387fa0602999d1b15d21904dc6ae0" },
+    "src/tracking.js": { "mode": "text-lf", "sha256": "72cb8a4a2d9cfb382b54610c46295637d70f217570c00d6d85840b0334ce729f" },
+    "src/settings.js": { "mode": "text-lf", "sha256": "69918ebb99ff95d7ad0aa8e56e28bf3ce0a0e7f5ec4272d25936a11570bc2a50" },
+    "vendor/three.module.min.js": { "mode": "text-lf", "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7" }
+  }
+}

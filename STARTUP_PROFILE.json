@@ -1,0 +1,30 @@
+{
+  "capturedAt": "2026-09-27T18:30:00+03:00",
+  "visual": {
+    "shape": "head",
+    "particles": 440000,
+    "introSeconds": 8.2,
+    "portrait": "assets/portrait.webp",
+    "state": "idle"
+  },
+  "voice": {
+    "startupMode": "choir",
+    "availableModes": ["clean", "assistant", "vocoder", "choir"],
+    "ttsVoice": "auto",
+    "ttsRate": 0
+  },
+  "dialog": {
+    "language": "ru",
+    "codexEffort": "low",
+    "codexModel": "",
+    "learnPersona": true,
+    "fillerPhrase": true
+  },
+  "ui": {
+    "subtitles": true,
+    "subtitlePosition": "right",
+    "showUserSpeech": true,
+    "cameraDebugWindow": true,
+    "mirrorFace": true
+  }
+}
