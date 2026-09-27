@@ -30,7 +30,7 @@
     "desktop.bat": { "mode": "text-lf", "sha256": "bcab3851a677e011fa531d7c6d83dc4c2a7e4b381e8916aadf23898171fed2c8" },
     "package.json": { "mode": "text-lf", "sha256": "02bc5a8c4d9a02d013b1387b24f0ed52cdb24311f2c516d8749f360da1cbbbe5" },
     "package-lock.json": { "mode": "text-lf", "sha256": "8d7abdb2d00cb2898debf55ed7d2c108854c10eff8bd33dcc5aa2947509dcbb6" },
-    "desktop/main.cjs": { "mode": "text-lf", "sha256": "2a544d91623d494787cb81f8576f8eacb17486665fa3ef310cf0313ed7298659" },
+    "desktop/main.cjs": { "mode": "text-lf", "sha256": "607288bb240b10ec40f794fa2615ecb01eb78f6d34f703a3842ee7f1f603e1e1" },
     "desktop/preload.cjs": { "mode": "text-lf", "sha256": "84abb49bf93f197f82f0fb3686a8ffe4a9e77b7dc46bf15ffea79d6f1e379d13" },
     "desktop/runtime.cjs": { "mode": "text-lf", "sha256": "58810e13dbac6412077aad482957541325784b5023bb0b12b1d3ef713bb5ab82" },
     "desktop/runtime.test.cjs": { "mode": "text-lf", "sha256": "dece961974546aab094fdef181b746ce11a874ea5bf44a81407443df0a0994a7" }

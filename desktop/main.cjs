@@ -8,6 +8,15 @@ const path = require('node:path');
 const { desktopUrl, existingPythonCandidates, isCompatibleService, SERVICE_URL } = require('./runtime.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
+const RUNTIME_ROOT = path.join(ROOT, '.runtime');
+const USER_DATA_ROOT = path.join(RUNTIME_ROOT, 'user-data');
+const SESSION_DATA_ROOT = path.join(RUNTIME_ROOT, 'session-data');
+fs.mkdirSync(USER_DATA_ROOT, { recursive: true });
+fs.mkdirSync(SESSION_DATA_ROOT, { recursive: true });
+app.setName('Yasen_Ava');
+app.setPath('userData', USER_DATA_ROOT);
+app.setPath('sessionData', SESSION_DATA_ROOT);
+
 const SMOKE_TEST = process.argv.includes('--smoke-test');
 const CAPTURE_PATH = process.env.YASEN_CAPTURE_PATH || path.join(app.getPath('temp'), 'yasen-ava-smoke.png');
 const MAX_START_ATTEMPTS = 3;
