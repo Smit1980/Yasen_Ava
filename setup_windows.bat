@@ -15,11 +15,19 @@ if errorlevel 1 goto :error
 ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 if errorlevel 1 goto :error
 
+where npm >nul 2>nul
+if errorlevel 1 (
+  echo Node.js 22+ не найден. Установите Node.js и повторите запуск.
+  goto :error
+)
+npm install
+if errorlevel 1 goto :error
+
 echo.
-echo Yasen_Ava установлен. Для запуска используйте run.bat
+echo Yasen_Ava установлен. Для постоянного аватара используйте desktop.bat
 exit /b 0
 
 :error
 echo.
-echo Установка не завершена. Проверьте Python 3.11 и подключение к интернету.
+echo Установка не завершена. Проверьте Python 3.11, Node.js 22+ и подключение к интернету.
 exit /b 1

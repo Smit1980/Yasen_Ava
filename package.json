@@ -1,0 +1,16 @@
+{
+  "name": "yasen-ava",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Yasen persistent transparent desktop avatar",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --smoke-test",
+    "test": "node --test desktop/*.test.cjs",
+    "check": "node --check desktop/main.cjs && node --check desktop/preload.cjs && node --check desktop/runtime.cjs && node --check src/main.js"
+  },
+  "devDependencies": {
+    "electron": "44.4.5"
+  }
+}

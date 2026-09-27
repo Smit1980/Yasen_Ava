@@ -3,12 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="yasen-desktop-version" content="1">
 <title>Voice Orb — визуал голоса ИИ-агента</title>
 <style>
   :root { --fg: #bfe6ff; --dim: #5d7d96; --accent: #3ab0ff; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #02050b; overflow: hidden;
     font: 13px/1.4 system-ui, "Segoe UI", sans-serif; color: var(--fg); }
+  html.desktop-overlay, html.desktop-overlay body { background: transparent; }
+  html.desktop-overlay #vignette { background: radial-gradient(ellipse at 50% 45%, transparent 42%, rgba(0,0,0,.20) 100%); }
+  html.desktop-overlay.desktop-passive #bar,
+  html.desktop-overlay.desktop-passive #hint,
+  html.desktop-overlay.desktop-passive #status,
+  html.desktop-overlay.desktop-passive #textpanel,
+  html.desktop-overlay.desktop-passive .panel,
+  html.desktop-overlay.desktop-passive #camdbg { display: none !important; }
+  html.desktop-overlay.desktop-interactive #bar { opacity: 1; pointer-events: auto; }
   canvas#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
   #vignette { position: fixed; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(0,0,0,.65) 100%); }

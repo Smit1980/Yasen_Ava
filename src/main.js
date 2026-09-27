@@ -13,6 +13,9 @@ import { Dialog } from './dialog.js';
 import { initPanels } from './panels.js';
 import { Reader, decodeText } from './reader.js';
 
+const DESKTOP_MODE = new URLSearchParams(location.search).get('desktop') === '1';
+if (DESKTOP_MODE) document.documentElement.classList.add('desktop-overlay', 'desktop-passive');
+
 // ---- интро: лицо собирается из потока частиц (?intro=0 - пропустить)
 const INTRO_LEN = 8.2;
 let introT = new URLSearchParams(location.search).get('intro') === '0' ? INTRO_LEN + 1 : 0;
@@ -49,8 +52,8 @@ const LM = portrait.LM;
 
 // ---------------------------------------------------------------- сцена
 const canvas = document.getElementById('stage');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
-renderer.setClearColor(0x02050b, 1);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: DESKTOP_MODE, powerPreference: 'high-performance' });
+renderer.setClearColor(0x02050b, DESKTOP_MODE ? 0 : 1);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
 const group = new THREE.Group();
@@ -541,6 +544,13 @@ q('#btn-dialog').addEventListener('click', toggleDialog);
 q('#btn-persona').addEventListener('click', () => panels.toggle('persona'));
 q('#btn-subs').addEventListener('click', () => S.set('subs', !S.get('subs')));
 q('#btn-settings').addEventListener('click', () => panels.toggle('settings'));
+
+if (window.yasenDesktop?.isDesktop) {
+  window.yasenDesktop.onCommand((command) => {
+    if (command === 'toggle-dialog') toggleDialog();
+    else if (command === 'replay-intro') replayIntro();
+  });
+}
 
 const KEYS = { 1: 'idle', 2: 'listening', 3: 'thinking', 4: 'speaking' };
 const VOICE_KEYS = { 5: 'clean', 6: 'assistant', 7: 'vocoder', 8: 'choir' };

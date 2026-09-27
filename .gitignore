@@ -7,6 +7,7 @@ __pycache__/
 node_modules/
 .venv/
 *.zip
+smoke-*.png
 
 # личные данные Ясеня: характер, память, история разговоров
 data/

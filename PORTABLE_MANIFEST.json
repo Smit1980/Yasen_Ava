@@ -1,20 +1,20 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "name": "Yasen_Ava",
   "sourceRepository": "https://github.com/Smit1980/Yasen",
   "sourceCommit": "0e6f6d8dbe5e85175c09cc76b2018b7f95f31831",
-  "capturedAt": "2026-09-27T18:30:00+03:00",
+  "capturedAt": "2026-09-27T21:00:00+03:00",
   "hashAlgorithm": "sha256",
   "textNormalization": "UTF-8 with LF line endings",
   "files": {
     "assets/portrait.webp": { "mode": "binary", "sha256": "6a3ce458c2b4641b7f943b70f0263b6b9aebbafed59260ab6b867fc8eb64330d" },
-    "index.html": { "mode": "text-lf", "sha256": "ff85a933e14b1e47f0b4fb94cc73514cf38c987b7f22f890b236b95062843410" },
+    "index.html": { "mode": "text-lf", "sha256": "b27d8b73ff59570bfdaac2e22f5cf833cb2db2980cc2a4877b492981cf53ef6f" },
     "STARTUP_PROFILE.json": { "mode": "text-lf", "sha256": "c48d83821c33d7ba4cedaf384084ec380967820a178157890d949c0a4565c2ac" },
     "requirements.txt": { "mode": "text-lf", "sha256": "e3b385b5c486a4899339a1b04e63ab167be12e5fc2ee25329deaa48caf1b0b74" },
     "bridge/server.py": { "mode": "text-lf", "sha256": "36badd2787b766d0ab445bfa68ab88ed10d0d197231f9de752c0cbbb631a7ecc" },
     "bridge/agent.py": { "mode": "text-lf", "sha256": "03caf3695685de7a9686f21ecf6d97d5e0b879c3a22909c0840da59fd12d5c97" },
     "bridge/stt.py": { "mode": "text-lf", "sha256": "77fbe4f7b12b074609862a81f2526f7bc7b05986b57de6cf9984a5f92e809393" },
-    "src/main.js": { "mode": "text-lf", "sha256": "3377ec9d1cbae3fa654f8611bc6f6368eda4fd9c5cc4638b9f2580fad7363d3b" },
+    "src/main.js": { "mode": "text-lf", "sha256": "9f74e32703da0700fc4825b67abc95abd0a7536e9a9124f55867bda05892e2bc" },
     "src/portrait.js": { "mode": "text-lf", "sha256": "6459808cd495890943c5ff1af0dd97d3667e7615d6f077e15018658944299ffd" },
     "src/shaders.js": { "mode": "text-lf", "sha256": "8a8cfee9f3611f49d24f4af06af5a9df76f40a28d1b86940e4079b865d7b0826" },
     "src/face.js": { "mode": "text-lf", "sha256": "b84e56bd460473c8486dfadaf519c62e983f3918a20ce4b6e669e5399a24ca09" },
@@ -23,6 +23,16 @@
     "src/audio.js": { "mode": "text-lf", "sha256": "3e7ebc10ba32f7914c9fd2448492101f744387fa0602999d1b15d21904dc6ae0" },
     "src/tracking.js": { "mode": "text-lf", "sha256": "72cb8a4a2d9cfb382b54610c46295637d70f217570c00d6d85840b0334ce729f" },
     "src/settings.js": { "mode": "text-lf", "sha256": "69918ebb99ff95d7ad0aa8e56e28bf3ce0a0e7f5ec4272d25936a11570bc2a50" },
-    "vendor/three.module.min.js": { "mode": "text-lf", "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7" }
+    "vendor/three.module.min.js": { "mode": "text-lf", "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7" },
+    "README.md": { "mode": "text-lf", "sha256": "18cd859e67e791b22ffe11173a112435d87724beaef08b00eaf9da63209571e7" },
+    "PORTABLE_DEPLOYMENT.md": { "mode": "text-lf", "sha256": "ce4c8cbf5bb5bb01a6f49e2296872193fc3a78782ba35e61d1ed6b1de4cd25d8" },
+    "setup_windows.bat": { "mode": "text-lf", "sha256": "7767b7ab87b1a732fcec67f98691fd52548858b08c855702894eb601ff1174d9" },
+    "desktop.bat": { "mode": "text-lf", "sha256": "bcab3851a677e011fa531d7c6d83dc4c2a7e4b381e8916aadf23898171fed2c8" },
+    "package.json": { "mode": "text-lf", "sha256": "02bc5a8c4d9a02d013b1387b24f0ed52cdb24311f2c516d8749f360da1cbbbe5" },
+    "package-lock.json": { "mode": "text-lf", "sha256": "8d7abdb2d00cb2898debf55ed7d2c108854c10eff8bd33dcc5aa2947509dcbb6" },
+    "desktop/main.cjs": { "mode": "text-lf", "sha256": "2a544d91623d494787cb81f8576f8eacb17486665fa3ef310cf0313ed7298659" },
+    "desktop/preload.cjs": { "mode": "text-lf", "sha256": "84abb49bf93f197f82f0fb3686a8ffe4a9e77b7dc46bf15ffea79d6f1e379d13" },
+    "desktop/runtime.cjs": { "mode": "text-lf", "sha256": "58810e13dbac6412077aad482957541325784b5023bb0b12b1d3ef713bb5ab82" },
+    "desktop/runtime.test.cjs": { "mode": "text-lf", "sha256": "dece961974546aab094fdef181b746ce11a874ea5bf44a81407443df0a0994a7" }
   }
 }
