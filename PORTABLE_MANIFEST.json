@@ -27,7 +27,7 @@
     "README.md": { "mode": "text-lf", "sha256": "18cd859e67e791b22ffe11173a112435d87724beaef08b00eaf9da63209571e7" },
     "PORTABLE_DEPLOYMENT.md": { "mode": "text-lf", "sha256": "ce4c8cbf5bb5bb01a6f49e2296872193fc3a78782ba35e61d1ed6b1de4cd25d8" },
     "setup_windows.bat": { "mode": "text-lf", "sha256": "7767b7ab87b1a732fcec67f98691fd52548858b08c855702894eb601ff1174d9" },
-    "desktop.bat": { "mode": "text-lf", "sha256": "bcab3851a677e011fa531d7c6d83dc4c2a7e4b381e8916aadf23898171fed2c8" },
+    "desktop.bat": { "mode": "text-lf", "sha256": "9b46440d565c99f62f23fb8cc309c8f421bc4576d4405d6843b67f54e2b75eff" },
     "package.json": { "mode": "text-lf", "sha256": "02bc5a8c4d9a02d013b1387b24f0ed52cdb24311f2c516d8749f360da1cbbbe5" },
     "package-lock.json": { "mode": "text-lf", "sha256": "8d7abdb2d00cb2898debf55ed7d2c108854c10eff8bd33dcc5aa2947509dcbb6" },
     "desktop/main.cjs": { "mode": "text-lf", "sha256": "607288bb240b10ec40f794fa2615ecb01eb78f6d34f703a3842ee7f1f603e1e1" },

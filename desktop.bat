@@ -8,4 +8,4 @@ if not exist "node_modules\electron\dist\electron.exe" (
   exit /b 1
 )
 
-start "Yasen_Ava" "%~dp0node_modules\electron\dist\electron.exe" "%~dp0"
+start "Yasen_Ava" "%~dp0node_modules\electron\dist\electron.exe" "%~dp0."
