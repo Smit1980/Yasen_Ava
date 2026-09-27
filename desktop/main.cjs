@@ -1,11 +1,11 @@
 'use strict';
 
-const { app, BrowserWindow, globalShortcut, Menu, nativeImage, screen, session, Tray } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, screen, session, Tray } = require('electron');
 const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
-const { desktopUrl, existingPythonCandidates, isCompatibleService, SERVICE_URL } = require('./runtime.cjs');
+const { desktopUrl, existingPythonCandidates, isCompatibleService, movedBounds, SERVICE_URL } = require('./runtime.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const RUNTIME_ROOT = path.join(ROOT, '.runtime');
@@ -25,6 +25,7 @@ let mainWindow = null;
 let tray = null;
 let ownedBridge = null;
 let interactive = false;
+let dragCapture = false;
 let quitting = false;
 let startAttempts = 0;
 let bridgeMonitor = null;
@@ -150,11 +151,39 @@ function send(command) {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('yasen-command', command);
 }
 
+function applyMouseMode() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  const capturesMouse = interactive || dragCapture;
+  mainWindow.setIgnoreMouseEvents(!capturesMouse, { forward: !capturesMouse });
+  mainWindow.setFocusable(interactive);
+}
+
+function isMainRenderer(event) {
+  return Boolean(mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents);
+}
+
+ipcMain.on('yasen-drag-start', (event) => {
+  if (!isMainRenderer(event)) return;
+  dragCapture = true;
+  applyMouseMode();
+});
+
+ipcMain.on('yasen-drag-move', (event, delta) => {
+  if (!isMainRenderer(event) || !dragCapture || !mainWindow) return;
+  const next = movedBounds(mainWindow.getBounds(), delta?.x, delta?.y);
+  if (next) mainWindow.setBounds(next);
+});
+
+ipcMain.on('yasen-drag-end', (event) => {
+  if (!isMainRenderer(event)) return;
+  dragCapture = false;
+  applyMouseMode();
+});
+
 function setInteractive(value) {
   interactive = Boolean(value);
   if (!mainWindow || mainWindow.isDestroyed()) return;
-  mainWindow.setIgnoreMouseEvents(!interactive, { forward: true });
-  mainWindow.setFocusable(interactive);
+  applyMouseMode();
   if (interactive) {
     mainWindow.show();
     mainWindow.focus();
@@ -223,7 +252,7 @@ async function createWindow() {
   });
   mainWindow.setAlwaysOnTop(true, 'screen-saver');
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-  mainWindow.setIgnoreMouseEvents(true, { forward: true });
+  applyMouseMode();
   mainWindow.on('close', (event) => {
     if (!quitting && !SMOKE_TEST) {
       event.preventDefault();
@@ -232,6 +261,8 @@ async function createWindow() {
     }
   });
   mainWindow.webContents.on('did-finish-load', () => {
+    dragCapture = false;
+    applyMouseMode();
     mainWindow.webContents.send('yasen-interactive', interactive);
   });
   await mainWindow.loadURL(desktopUrl(SERVICE_URL));
@@ -245,12 +276,19 @@ async function createWindow() {
     await delay(150);
     const scaleControl = await mainWindow.webContents.executeJavaScript('window.orb?.getAvatarScale?.() || null');
     await mainWindow.webContents.executeJavaScript(`window.orb?.setAvatarScale?.(${JSON.stringify(initialScale)}, false)`);
+    const beforeDrag = mainWindow.getBounds();
+    await mainWindow.webContents.executeJavaScript('window.yasenDesktop?.beginDrag?.(); window.yasenDesktop?.dragBy?.(13, -9);');
+    await delay(150);
+    const afterDrag = mainWindow.getBounds();
+    await mainWindow.webContents.executeJavaScript('window.yasenDesktop?.endDrag?.()');
+    mainWindow.setBounds(beforeDrag);
     const profile = await mainWindow.webContents.executeJavaScript(`({
       voice: window.orb?.audio?.voice || null,
       desktopOverlay: document.documentElement.classList.contains('desktop-overlay'),
       passive: document.documentElement.classList.contains('desktop-passive'),
       avatarScale: window.orb?.getAvatarScale?.() || null,
       scaleControl: ${JSON.stringify(scaleControl)},
+      dragMove: ${JSON.stringify({ x: afterDrag.x - beforeDrag.x, y: afterDrag.y - beforeDrag.y })},
       status: document.getElementById('status')?.textContent || ''
     })`);
     const image = await mainWindow.webContents.capturePage();

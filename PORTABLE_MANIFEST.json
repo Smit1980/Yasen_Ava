@@ -14,7 +14,7 @@
     "bridge/server.py": { "mode": "text-lf", "sha256": "36badd2787b766d0ab445bfa68ab88ed10d0d197231f9de752c0cbbb631a7ecc" },
     "bridge/agent.py": { "mode": "text-lf", "sha256": "03caf3695685de7a9686f21ecf6d97d5e0b879c3a22909c0840da59fd12d5c97" },
     "bridge/stt.py": { "mode": "text-lf", "sha256": "77fbe4f7b12b074609862a81f2526f7bc7b05986b57de6cf9984a5f92e809393" },
-    "src/main.js": { "mode": "text-lf", "sha256": "3f71b85c91d20db39d14fd1984b973252a88f38a3305b4e235f8259ff46b6246" },
+    "src/main.js": { "mode": "text-lf", "sha256": "69b5975e1d64960da1776674d1142acf943a8c9d1e9edb31d10c66b0d3b8d5a1" },
     "src/portrait.js": { "mode": "text-lf", "sha256": "6459808cd495890943c5ff1af0dd97d3667e7615d6f077e15018658944299ffd" },
     "src/shaders.js": { "mode": "text-lf", "sha256": "8a8cfee9f3611f49d24f4af06af5a9df76f40a28d1b86940e4079b865d7b0826" },
     "src/face.js": { "mode": "text-lf", "sha256": "b84e56bd460473c8486dfadaf519c62e983f3918a20ce4b6e669e5399a24ca09" },
@@ -24,15 +24,15 @@
     "src/tracking.js": { "mode": "text-lf", "sha256": "72cb8a4a2d9cfb382b54610c46295637d70f217570c00d6d85840b0334ce729f" },
     "src/settings.js": { "mode": "text-lf", "sha256": "69918ebb99ff95d7ad0aa8e56e28bf3ce0a0e7f5ec4272d25936a11570bc2a50" },
     "vendor/three.module.min.js": { "mode": "text-lf", "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7" },
-    "README.md": { "mode": "text-lf", "sha256": "08572ffad8d3b134712cb56affcce5bcbe8a3bf2a994a4d8634c8255c8553d70" },
-    "PORTABLE_DEPLOYMENT.md": { "mode": "text-lf", "sha256": "86434371650ad5d81a007ba73721642dfc3ef494901748d828a88f72b5ff06cf" },
+    "README.md": { "mode": "text-lf", "sha256": "b3f03ae812ce629f99549f9ee5978684527935b84f91bf8c57db8244a611a768" },
+    "PORTABLE_DEPLOYMENT.md": { "mode": "text-lf", "sha256": "e8ff8448ff701c946277e188a9fc2330639d61c22097084eeea7b74226396491" },
     "setup_windows.bat": { "mode": "text-lf", "sha256": "7767b7ab87b1a732fcec67f98691fd52548858b08c855702894eb601ff1174d9" },
     "desktop.bat": { "mode": "text-lf", "sha256": "9b46440d565c99f62f23fb8cc309c8f421bc4576d4405d6843b67f54e2b75eff" },
     "package.json": { "mode": "text-lf", "sha256": "02bc5a8c4d9a02d013b1387b24f0ed52cdb24311f2c516d8749f360da1cbbbe5" },
     "package-lock.json": { "mode": "text-lf", "sha256": "8d7abdb2d00cb2898debf55ed7d2c108854c10eff8bd33dcc5aa2947509dcbb6" },
-    "desktop/main.cjs": { "mode": "text-lf", "sha256": "444d7ac865c214ce86e732269cbf1af5dfdb54eee74d7164adcf3c5d10f9751e" },
-    "desktop/preload.cjs": { "mode": "text-lf", "sha256": "84abb49bf93f197f82f0fb3686a8ffe4a9e77b7dc46bf15ffea79d6f1e379d13" },
-    "desktop/runtime.cjs": { "mode": "text-lf", "sha256": "58810e13dbac6412077aad482957541325784b5023bb0b12b1d3ef713bb5ab82" },
-    "desktop/runtime.test.cjs": { "mode": "text-lf", "sha256": "dece961974546aab094fdef181b746ce11a874ea5bf44a81407443df0a0994a7" }
+    "desktop/main.cjs": { "mode": "text-lf", "sha256": "4033f9ddb479bf785a4384ef0849cab103ad4fc4cb80741f6802b0c841a783d4" },
+    "desktop/preload.cjs": { "mode": "text-lf", "sha256": "6d7ffda97da217857cc5319e0ecc790f0bdeebe6fab683d352a8ce672504ba86" },
+    "desktop/runtime.cjs": { "mode": "text-lf", "sha256": "743a694e170654d15dfe0bbacc9b8ed11d5e31ea2e8446c41eb2c76efd00399c" },
+    "desktop/runtime.test.cjs": { "mode": "text-lf", "sha256": "b66412ea1a01efd678ca6e1e61a8c6f7dabe070c716cb79286d783a1acadc4dd" }
   }
 }

@@ -4,6 +4,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('yasenDesktop', {
   isDesktop: true,
+  beginDrag() {
+    ipcRenderer.send('yasen-drag-start');
+  },
+  dragBy(x, y) {
+    ipcRenderer.send('yasen-drag-move', { x, y });
+  },
+  endDrag() {
+    ipcRenderer.send('yasen-drag-end');
+  },
   onCommand(callback) {
     if (typeof callback !== 'function') return () => {};
     const handler = (_event, command) => callback(command);

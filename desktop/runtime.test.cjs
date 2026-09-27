@@ -3,7 +3,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const test = require('node:test');
-const { desktopUrl, isCompatibleService, pythonCandidates } = require('./runtime.cjs');
+const { boundedMoveDelta, desktopUrl, isCompatibleService, movedBounds, pythonCandidates } = require('./runtime.cjs');
 
 test('recognizes only a Yasen/Voice Orb page', () => {
   assert.equal(isCompatibleService('<meta name="yasen-desktop-version" content="1">'), true);
@@ -25,4 +25,11 @@ test('custom Python takes priority and candidates stay unique', () => {
   const list = pythonCandidates(root, { YASEN_PYTHON: 'C:\\Python\\python.exe' });
   assert.equal(list[0], 'C:\\Python\\python.exe');
   assert.equal(new Set(list).size, list.length);
+});
+
+test('drag movement preserves window size and rejects unsafe deltas', () => {
+  const moved = movedBounds({ x: 100, y: 200, width: 1920, height: 1080 }, 18.8, -31.2);
+  assert.deepEqual(moved, { x: 118, y: 169, width: 1920, height: 1080 });
+  assert.equal(boundedMoveDelta(9999), 240);
+  assert.equal(boundedMoveDelta('not-a-number'), 0);
 });

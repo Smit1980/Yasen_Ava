@@ -628,15 +628,67 @@ window.addEventListener('keydown', touchBar);
 
 // курсор отталкивает частицы
 const pointerNdc = new THREE.Vector2(9, 9);
+let desktopDrag = null;
+let desktopDragArmed = false;
+let pendingDragX = 0, pendingDragY = 0, dragFrame = 0;
+
+function armDesktopDrag() {
+  if (!DESKTOP_MODE || desktopDragArmed || !window.yasenDesktop?.beginDrag) return;
+  desktopDragArmed = true;
+  window.yasenDesktop.beginDrag();
+}
+
+function queueDesktopMove(dx, dy) {
+  pendingDragX += dx;
+  pendingDragY += dy;
+  if (dragFrame) return;
+  dragFrame = requestAnimationFrame(() => {
+    dragFrame = 0;
+    window.yasenDesktop?.dragBy?.(pendingDragX, pendingDragY);
+    pendingDragX = 0;
+    pendingDragY = 0;
+  });
+}
+
+function endDesktopDrag() {
+  desktopDrag = null;
+  if (dragFrame) cancelAnimationFrame(dragFrame);
+  dragFrame = 0;
+  pendingDragX = pendingDragY = 0;
+  if (!desktopDragArmed) return;
+  desktopDragArmed = false;
+  window.yasenDesktop?.endDrag?.();
+}
+
 window.addEventListener('pointermove', (e) => {
   touchBar();
   pointerNdc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  if (!DESKTOP_MODE || !window.yasenDesktop) return;
+  if (desktopDrag) {
+    if (!e.shiftKey || !(e.buttons & 1)) { endDesktopDrag(); return; }
+    queueDesktopMove(e.screenX - desktopDrag.x, e.screenY - desktopDrag.y);
+    desktopDrag.x = e.screenX;
+    desktopDrag.y = e.screenY;
+  } else if (e.shiftKey) armDesktopDrag();
+  else endDesktopDrag();
 });
-window.addEventListener('pointerleave', () => pointerNdc.set(9, 9));
-window.addEventListener('pointerdown', () => {
+window.addEventListener('pointerleave', () => {
+  pointerNdc.set(9, 9);
+  if (!desktopDrag) endDesktopDrag();
+});
+window.addEventListener('pointerdown', (e) => {
+  if (DESKTOP_MODE && e.button === 0 && e.shiftKey) {
+    armDesktopDrag();
+    desktopDrag = { x: e.screenX, y: e.screenY };
+    canvas.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+    return;
+  }
   if (introT < INTRO_LEN) { introT = INTRO_LEN; syncUi(); return; }   // клик пропускает интро
   burst = Math.max(burst, 0.6);
 });
+window.addEventListener('pointerup', endDesktopDrag);
+window.addEventListener('blur', endDesktopDrag);
 
 // ---------------------------------------------------------------- цикл
 const clock = new THREE.Clock();

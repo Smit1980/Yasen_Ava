@@ -37,10 +37,27 @@ function desktopUrl(base = SERVICE_URL, params = {}) {
   return url.toString();
 }
 
+function boundedMoveDelta(value, limit = 240) {
+  const parsed = Math.trunc(Number(value));
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(-limit, Math.min(limit, parsed));
+}
+
+function movedBounds(bounds, dx, dy) {
+  if (!bounds || !Number.isFinite(bounds.x) || !Number.isFinite(bounds.y)) return null;
+  return {
+    ...bounds,
+    x: bounds.x + boundedMoveDelta(dx),
+    y: bounds.y + boundedMoveDelta(dy),
+  };
+}
+
 module.exports = {
   SERVICE_URL,
+  boundedMoveDelta,
   desktopUrl,
   existingPythonCandidates,
   isCompatibleService,
+  movedBounds,
   pythonCandidates,
 };
