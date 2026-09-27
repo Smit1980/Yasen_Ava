@@ -52,9 +52,25 @@ function movedBounds(bounds, dx, dy) {
   };
 }
 
+function centeredSquareBounds(workArea, preferredSide = 1120, margin = 64) {
+  if (!workArea || !Number.isFinite(workArea.x) || !Number.isFinite(workArea.y)
+    || !Number.isFinite(workArea.width) || !Number.isFinite(workArea.height)) return null;
+  const availableWidth = workArea.width - margin;
+  const availableHeight = workArea.height - margin;
+  const side = Math.floor(Math.min(preferredSide, availableWidth, availableHeight));
+  if (side < 1) return null;
+  return {
+    x: Math.round(workArea.x + (workArea.width - side) / 2),
+    y: Math.round(workArea.y + (workArea.height - side) / 2),
+    width: side,
+    height: side,
+  };
+}
+
 module.exports = {
   SERVICE_URL,
   boundedMoveDelta,
+  centeredSquareBounds,
   desktopUrl,
   existingPythonCandidates,
   isCompatibleService,

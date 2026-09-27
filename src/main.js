@@ -671,8 +671,6 @@ window.addEventListener('pointermove', (e) => {
     desktopDrag.y = e.screenY;
   } else if (e.shiftKey) {
     armDesktopDrag();
-    // В пассивном окне первое нажатие проходит сквозь него, но движение с кнопкой
-    // всё равно приходит благодаря forward:true — начинаем перенос с этого движения.
     if (e.buttons & 1) desktopDrag = { x: e.screenX, y: e.screenY };
   }
   else endDesktopDrag();
@@ -694,6 +692,11 @@ window.addEventListener('pointerdown', (e) => {
 });
 window.addEventListener('pointerup', endDesktopDrag);
 window.addEventListener('blur', endDesktopDrag);
+window.addEventListener('wheel', (e) => {
+  if (!DESKTOP_MODE || !e.shiftKey || !e.deltaY) return;
+  e.preventDefault();
+  changeAvatarScale(e.deltaY < 0 ? 0.05 : -0.05);
+}, { passive: false });
 
 // ---------------------------------------------------------------- цикл
 const clock = new THREE.Clock();

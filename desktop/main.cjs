@@ -5,7 +5,14 @@ const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
-const { desktopUrl, existingPythonCandidates, isCompatibleService, movedBounds, SERVICE_URL } = require('./runtime.cjs');
+const {
+  centeredSquareBounds,
+  desktopUrl,
+  existingPythonCandidates,
+  isCompatibleService,
+  movedBounds,
+  SERVICE_URL,
+} = require('./runtime.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const RUNTIME_ROOT = path.join(ROOT, '.runtime');
@@ -20,6 +27,9 @@ app.setPath('sessionData', SESSION_DATA_ROOT);
 const SMOKE_TEST = process.argv.includes('--smoke-test');
 const CAPTURE_PATH = process.env.YASEN_CAPTURE_PATH || path.join(app.getPath('temp'), 'yasen-ava-smoke.png');
 const MAX_START_ATTEMPTS = 3;
+const WINDOW_BOUNDS_FILE = path.join(USER_DATA_ROOT, 'avatar-window.json');
+const AVATAR_WINDOW_SIDE = 1120;
+const WINDOW_MARGIN = 64;
 
 let mainWindow = null;
 let tray = null;
@@ -30,9 +40,56 @@ let quitting = false;
 let startAttempts = 0;
 let bridgeMonitor = null;
 let bridgeRecovering = false;
+let boundsSaveTimer = null;
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function defaultWindowBounds() {
+  const workArea = screen.getPrimaryDisplay().workArea;
+  return centeredSquareBounds(workArea, AVATAR_WINDOW_SIDE, WINDOW_MARGIN)
+    || { x: workArea.x, y: workArea.y, width: workArea.width, height: workArea.height };
+}
+
+function isVisibleOnAnyDisplay(bounds) {
+  return screen.getAllDisplays().some((display) => {
+    const area = display.bounds;
+    const visibleMargin = 80;
+    return bounds.x < area.x + area.width - visibleMargin
+      && bounds.x + bounds.width > area.x + visibleMargin
+      && bounds.y < area.y + area.height - visibleMargin
+      && bounds.y + bounds.height > area.y + visibleMargin;
+  });
+}
+
+function loadWindowBounds() {
+  const fallback = defaultWindowBounds();
+  if (SMOKE_TEST) return fallback;
+  try {
+    const saved = JSON.parse(fs.readFileSync(WINDOW_BOUNDS_FILE, 'utf8'));
+    const numeric = ['x', 'y', 'width', 'height'].every((key) => Number.isFinite(saved?.[key]));
+    if (numeric && saved.width === saved.height && saved.width >= 240 && isVisibleOnAnyDisplay(saved)) return saved;
+  } catch {
+    // No saved position yet, or the previous display is no longer available.
+  }
+  return fallback;
+}
+
+function saveWindowBounds() {
+  if (SMOKE_TEST || !mainWindow || mainWindow.isDestroyed()) return;
+  try {
+    fs.writeFileSync(WINDOW_BOUNDS_FILE, `${JSON.stringify(mainWindow.getBounds())}\n`, 'utf8');
+  } catch {
+    // Saving the optional desktop position must not interrupt the avatar.
+  }
+}
+
+function scheduleWindowBoundsSave() {
+  if (SMOKE_TEST) return;
+  clearTimeout(boundsSaveTimer);
+  boundsSaveTimer = setTimeout(saveWindowBounds, 400);
+  boundsSaveTimer.unref?.();
 }
 
 function fetchText(url, timeoutMs = 1500) {
@@ -153,8 +210,7 @@ function send(command) {
 
 function applyMouseMode() {
   if (!mainWindow || mainWindow.isDestroyed()) return;
-  const capturesMouse = interactive || dragCapture;
-  mainWindow.setIgnoreMouseEvents(!capturesMouse, { forward: !capturesMouse });
+  mainWindow.setIgnoreMouseEvents(false);
   mainWindow.setFocusable(interactive);
 }
 
@@ -230,7 +286,7 @@ function rebuildTrayMenu() {
 }
 
 async function createWindow() {
-  const bounds = screen.getPrimaryDisplay().bounds;
+  const bounds = loadWindowBounds();
   mainWindow = new BrowserWindow({
     ...bounds,
     transparent: true,
@@ -260,6 +316,7 @@ async function createWindow() {
       rebuildTrayMenu();
     }
   });
+  mainWindow.on('move', scheduleWindowBoundsSave);
   mainWindow.webContents.on('did-finish-load', () => {
     dragCapture = false;
     applyMouseMode();
@@ -275,6 +332,11 @@ async function createWindow() {
     send('scale-up');
     await delay(150);
     const scaleControl = await mainWindow.webContents.executeJavaScript('window.orb?.getAvatarScale?.() || null');
+    await mainWindow.webContents.executeJavaScript(`window.dispatchEvent(new WheelEvent('wheel', {
+      deltaY: -100, shiftKey: true, cancelable: true
+    }))`);
+    await delay(150);
+    const wheelScale = await mainWindow.webContents.executeJavaScript('window.orb?.getAvatarScale?.() || null');
     await mainWindow.webContents.executeJavaScript(`window.orb?.setAvatarScale?.(${JSON.stringify(initialScale)}, false)`);
     const beforeDrag = mainWindow.getBounds();
     await mainWindow.webContents.executeJavaScript('window.yasenDesktop?.beginDrag?.(); window.yasenDesktop?.dragBy?.(13, -9);');
@@ -288,12 +350,14 @@ async function createWindow() {
       passive: document.documentElement.classList.contains('desktop-passive'),
       avatarScale: window.orb?.getAvatarScale?.() || null,
       scaleControl: ${JSON.stringify(scaleControl)},
+       wheelScale: ${JSON.stringify(wheelScale)},
       dragMove: ${JSON.stringify({ x: afterDrag.x - beforeDrag.x, y: afterDrag.y - beforeDrag.y })},
       status: document.getElementById('status')?.textContent || ''
     })`);
     const image = await mainWindow.webContents.capturePage();
     fs.writeFileSync(CAPTURE_PATH, image.toPNG());
-    process.stdout.write(`${JSON.stringify({ ok: true, capture: CAPTURE_PATH, size: image.getSize(), profile })}\n`);
+    const size = image.getSize();
+    process.stdout.write(`${JSON.stringify({ ok: true, capture: CAPTURE_PATH, size, square: size.width === size.height, profile })}\n`);
     quitting = true;
     app.quit();
     return;
@@ -350,6 +414,8 @@ if (!hasSingleInstanceLock) {
 app.on('before-quit', () => {
   quitting = true;
   clearInterval(bridgeMonitor);
+  clearTimeout(boundsSaveTimer);
+  saveWindowBounds();
   globalShortcut.unregisterAll();
   stopOwnedBridge();
 });
