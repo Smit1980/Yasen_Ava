@@ -669,7 +669,12 @@ window.addEventListener('pointermove', (e) => {
     queueDesktopMove(e.screenX - desktopDrag.x, e.screenY - desktopDrag.y);
     desktopDrag.x = e.screenX;
     desktopDrag.y = e.screenY;
-  } else if (e.shiftKey) armDesktopDrag();
+  } else if (e.shiftKey) {
+    armDesktopDrag();
+    // В пассивном окне первое нажатие проходит сквозь него, но движение с кнопкой
+    // всё равно приходит благодаря forward:true — начинаем перенос с этого движения.
+    if (e.buttons & 1) desktopDrag = { x: e.screenX, y: e.screenY };
+  }
   else endDesktopDrag();
 });
 window.addEventListener('pointerleave', () => {

@@ -14,7 +14,7 @@
     "bridge/server.py": { "mode": "text-lf", "sha256": "36badd2787b766d0ab445bfa68ab88ed10d0d197231f9de752c0cbbb631a7ecc" },
     "bridge/agent.py": { "mode": "text-lf", "sha256": "03caf3695685de7a9686f21ecf6d97d5e0b879c3a22909c0840da59fd12d5c97" },
     "bridge/stt.py": { "mode": "text-lf", "sha256": "77fbe4f7b12b074609862a81f2526f7bc7b05986b57de6cf9984a5f92e809393" },
-    "src/main.js": { "mode": "text-lf", "sha256": "69b5975e1d64960da1776674d1142acf943a8c9d1e9edb31d10c66b0d3b8d5a1" },
+    "src/main.js": { "mode": "text-lf", "sha256": "6cfc045e81336d5a833704334ac5dd3fe85b338fa6cf01dac14db7a27acaac31" },
     "src/portrait.js": { "mode": "text-lf", "sha256": "6459808cd495890943c5ff1af0dd97d3667e7615d6f077e15018658944299ffd" },
     "src/shaders.js": { "mode": "text-lf", "sha256": "8a8cfee9f3611f49d24f4af06af5a9df76f40a28d1b86940e4079b865d7b0826" },
     "src/face.js": { "mode": "text-lf", "sha256": "b84e56bd460473c8486dfadaf519c62e983f3918a20ce4b6e669e5399a24ca09" },
