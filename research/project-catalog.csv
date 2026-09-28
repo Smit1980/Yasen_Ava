@@ -1,0 +1,15 @@
+id,name,category,source_url,docs_url,license,status,pilot_recommendation,card
+yasen,Ясень,current-system|visual|voice,,../README.md,UNLICENSED,active-local,core,research/projects/00-yasen/README.md
+apex-ui,APEX-UI,visual|reasoning-ui,https://github.com/RubenM1990/APEX-UI,https://github.com/RubenM1990/APEX-UI#readme,MIT,public,study-and-adapt,research/projects/01-apex-ui/README.md
+pipecat,Pipecat,realtime-voice|orchestration|webrtc,https://github.com/pipecat-ai/pipecat,https://docs.pipecat.ai,BSD-2-Clause,active,primary,research/projects/02-pipecat/README.md
+livekit-agents,LiveKit Agents,realtime-voice|webrtc|telephony,https://github.com/livekit/agents,https://docs.livekit.io/agents,Apache-2.0,active,secondary,research/projects/03-livekit-agents/README.md
+openai-realtime-agents,OpenAI Realtime Agents,realtime-voice|agent-example|commercial-api,https://github.com/openai/openai-realtime-agents,https://developers.openai.com/api/docs/guides/realtime,MIT,active,benchmark,research/projects/04-openai-realtime-agents/README.md
+fay,Fay,digital-human|agent-framework|voice,https://github.com/xszyou/Fay,https://github.com/xszyou/Fay#readme,GPL-3.0,active,study-only,research/projects/05-fay/README.md
+vach,Vach,digital-human|talking-head,https://github.com/Hujiazeng/Vach,https://github.com/Hujiazeng/Vach#readme,NOASSERTION,public-experimental,research-only,research/projects/06-vach/README.md
+opentalking,OpenTalking,digital-human|webrtc|voice,https://github.com/datascale-ai/opentalking,https://datascale-ai.github.io/opentalking,Apache-2.0,active,study-no-local-render,research/projects/07-opentalking/README.md
+livetalking,LiveTalking,digital-human|webrtc|talking-head,https://github.com/lipku/LiveTalking,https://github.com/lipku/LiveTalking#readme,Apache-2.0,active,study-no-local-render,research/projects/08-livetalking/README.md
+rasa,Rasa,dialog|nlu|workflow,https://github.com/RasaHQ/rasa,https://rasa.com/docs,Apache-2.0,active,optional-later,research/projects/09-rasa/README.md
+botpress,Botpress,dialog|integrations|agent-hub,https://github.com/botpress/botpress,https://botpress.com/docs,MIT,active,optional-later,research/projects/10-botpress/README.md
+parlai,ParlAI,research|dialog-models,https://github.com/facebookresearch/ParlAI,https://parl.ai,MIT,archived-2026-07-30,do-not-base-pilot,research/projects/11-parlai/README.md
+transformers,Transformers,models|llm|speech,https://github.com/huggingface/transformers,https://huggingface.co/docs/transformers,Apache-2.0,active,use-only-if-required,research/projects/12-transformers/README.md
+whisper,Whisper,speech-to-text|local-model,https://github.com/openai/whisper,https://github.com/openai/whisper#readme,MIT,active,fallback-and-benchmark,research/projects/13-whisper/README.md

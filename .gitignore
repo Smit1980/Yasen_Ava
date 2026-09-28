@@ -9,6 +9,8 @@ node_modules/
 .runtime/
 *.zip
 smoke-*.png
+reference-src/
+research/projects.lock.json
 
 # личные данные Ясеня: характер, память, история разговоров
 data/

@@ -6,4 +6,6 @@
 *.md text eol=lf
 *.mjs text eol=lf
 *.py text eol=lf
+*.png binary
 *.webp binary
+research/source-report/deep-research-report.md -whitespace
